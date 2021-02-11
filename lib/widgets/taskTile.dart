@@ -4,17 +4,12 @@ import 'package:intl/intl.dart';
 
 class TaskTile extends StatelessWidget {
   final String name;
-  final String description;
-  final DateTime dueDate;
+  final DateTime taskDate;
   final bool isDone;
   final Function checkboxCallback;
 
   const TaskTile(
-      {this.isDone,
-      this.name,
-      this.description,
-      this.dueDate,
-      this.checkboxCallback});
+      {this.isDone, this.name, this.taskDate, this.checkboxCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -43,60 +38,41 @@ class TaskTile extends StatelessWidget {
               ),
               Expanded(
                 flex: 5,
-                child: Text(name,
-                    style: TextStyle(
-                      fontSize: 20,
-                      decoration: isDone ? TextDecoration.lineThrough : null,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  DateFormat('Hm', 'en_US').format(dueDate),
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(''),
-              ),
-              Expanded(
-                flex: 5,
                 child: Container(
-                  padding: EdgeInsets.only(bottom: 20.0),
                   decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 1,
-                        color: Colors.grey[300],
+                      color: Colors.grey.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10)),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: TextStyle(
+                          fontSize: 18,
+                          decoration:
+                              isDone ? TextDecoration.lineThrough : null,
+                        ),
                       ),
-                    ),
-                  ),
-                  child: Text(
-                    description,
-                    // textAlign: TextAlign.justify,
-                    style: TextStyle(
-                        fontSize: 16,
-                        decoration: isDone ? TextDecoration.lineThrough : null),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        DateFormat('EEEE, dd MMMM yy', 'en_US')
+                            .format(taskDate),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(''),
               ),
             ],
           ),
           SizedBox(
-            height: 10,
+            height: 40,
           ),
         ],
       ),

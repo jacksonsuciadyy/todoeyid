@@ -4,15 +4,13 @@ import 'package:uuid/uuid.dart';
 class Task {
   String taskID;
   String name;
-  String description;
-  DateTime dueDate;
+  DateTime taskDate;
   bool isDone;
 
   Task({
     @required this.taskID,
     this.name,
-    this.description = '',
-    this.dueDate,
+    this.taskDate,
     this.isDone = false,
   });
 }
@@ -22,37 +20,33 @@ class Tasks extends ChangeNotifier {
     Task(
       taskID: Uuid().v4(),
       name: 'Task 1',
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore",
-      dueDate: DateTime.now(),
+      taskDate: DateTime.now(),
     ),
     Task(
       taskID: Uuid().v4(),
       name: 'Task 2',
-      description: "This is Description",
-      dueDate: DateTime.now(),
+      taskDate: DateTime.now(),
     ),
     Task(
       taskID: Uuid().v4(),
-      name: 'Task 3',
-      dueDate: DateTime.now(),
+      name:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      taskDate: DateTime.now(),
     ),
     Task(
       taskID: Uuid().v4(),
       name: 'Task 4',
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore",
-      dueDate: DateTime.now(),
+      taskDate: DateTime.now(),
     ),
     Task(
       taskID: Uuid().v4(),
       name: 'Task 5',
-      description: "This is Description",
-      dueDate: DateTime.now(),
+      taskDate: DateTime.now(),
     ),
   ];
 
   List<Task> get tasks {
+    _tasks.sort((a, b) => b.taskDate.compareTo(a.taskDate));
     return [..._tasks];
   }
 

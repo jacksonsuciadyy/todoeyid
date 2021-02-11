@@ -21,8 +21,7 @@ class TasksList extends StatelessWidget {
               final task = tasksData.tasks[i];
               return TaskTile(
                 name: task.name,
-                description: task.description,
-                dueDate: task.dueDate,
+                taskDate: task.taskDate,
                 isDone: task.isDone,
                 checkboxCallback: (bool checkboxState) {
                   tasksData.updateTask(task.taskID);

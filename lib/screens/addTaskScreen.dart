@@ -74,24 +74,24 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                TextField(
-                  controller: descriptionController,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    hintText: 'Description',
-                    hintStyle: TextStyle(letterSpacing: 2.0),
-                    labelStyle: TextStyle(),
-                    prefixIcon: Icon(Icons.description),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Theme.of(context).primaryColor, width: 1.0),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                // TextField(
+                //   controller: descriptionController,
+                //   maxLines: null,
+                //   decoration: InputDecoration(
+                //     hintText: 'Description',
+                //     hintStyle: TextStyle(letterSpacing: 2.0),
+                //     labelStyle: TextStyle(),
+                //     prefixIcon: Icon(Icons.description),
+                //     border: OutlineInputBorder(
+                //       borderSide: BorderSide(
+                //           color: Theme.of(context).primaryColor, width: 1.0),
+                //       borderRadius: BorderRadius.circular(10),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
                 TextField(
                   controller: dateFieldController,
                   onTap: _selectDate,
@@ -144,8 +144,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       Task(
                         taskID: Uuid().v4(),
                         name: nameController.text,
-                        description: descriptionController.text,
-                        dueDate: DateFormat("dd MMM yyyy hh:mm").parse(
+                        taskDate: DateFormat("dd MMM yyyy hh:mm").parse(
                             dateFieldController.text +
                                 " " +
                                 timeFieldController.text),

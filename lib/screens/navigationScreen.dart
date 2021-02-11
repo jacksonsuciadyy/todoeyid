@@ -15,9 +15,7 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   final List<Widget> _listWidgets = [
     TasksScreen(),
-    CalendarScreen(),
     Text('dummy widget'),
-    NotificationScreen(),
     SettingsScreen(),
   ];
 
@@ -59,10 +57,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
             label: 'Tasks',
           ),
           CustomBottomNavigationItem(
-            icon: Icons.calendar_today_sharp,
-            label: 'Tasks',
-          ),
-          CustomBottomNavigationItem(
             icon: Icons.add,
             label: 'Tasks',
             isCenter: true,
@@ -81,16 +75,12 @@ class _NavigationScreenState extends State<NavigationScreen> {
             },
           ),
           CustomBottomNavigationItem(
-            icon: Icons.notifications,
-            label: 'Tasks',
-          ),
-          CustomBottomNavigationItem(
             icon: Icons.settings,
             label: 'Settings',
           ),
         ],
         onChange: (newIndex) {
-          if (newIndex != 2) {
+          if (newIndex != 1) {
             setState(() {
               _selectedIndex = newIndex;
             });
