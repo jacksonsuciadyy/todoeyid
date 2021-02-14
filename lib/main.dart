@@ -19,7 +19,7 @@ class Main extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.redAccent,
           primarySwatch: Colors.indigo,
-          accentColor: Colors.amber,
+          accentColor: Colors.redAccent,
         ),
         home: NavigationScreen(),
       ),

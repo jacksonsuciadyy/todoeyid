@@ -27,7 +27,7 @@ class TaskTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(
+              Flexible(
                 flex: 1,
                 child: CircularCheckBox(
                   activeColor: Theme.of(context).primaryColor,
@@ -36,43 +36,28 @@ class TaskTile extends StatelessWidget {
                   onChanged: checkboxCallback,
                 ),
               ),
-              Expanded(
-                flex: 5,
+              Flexible(
+                flex: 6,
                 child: Container(
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
+                      // color: Colors.grey.withOpacity(0.2),
+                      color: Colors.redAccent.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(10)),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 18,
-                          decoration:
-                              isDone ? TextDecoration.lineThrough : null,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        DateFormat('EEEE, dd MMMM yy', 'en_US')
-                            .format(taskDate),
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: 16,
+                      decoration: isDone ? TextDecoration.lineThrough : null,
+                    ),
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(
-            height: 40,
+            height: 10,
           ),
         ],
       ),

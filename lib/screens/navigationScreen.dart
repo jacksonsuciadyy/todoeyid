@@ -21,6 +21,32 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   int _selectedIndex = 0;
 
+  void _modalBottomSheetMenu() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      context: context,
+      builder: (builder) {
+        // return new Container(
+        //   height: MediaQuery.of(context).viewInsets.bottom,
+        //   color: Colors.transparent, //could change this to Color(0xFF737373),
+        //   //so you don't have to change MaterialApp canvasColor
+        //   child: new Container(
+        //     decoration: new BoxDecoration(
+        //         color: Colors.white,
+        //         borderRadius: new BorderRadius.only(
+        //             topLeft: const Radius.circular(10.0),
+        //             topRight: const Radius.circular(10.0))),
+        //     child: AddTaskScreen(),
+        //   ),
+        // );
+        return AddTaskScreen();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,19 +86,20 @@ class _NavigationScreenState extends State<NavigationScreen> {
             icon: Icons.add,
             label: 'Tasks',
             isCenter: true,
-            onTapCenter: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
-                    ),
-                    child: AddTaskScreen(),
-                  ),
-                ),
-              );
-            },
+            onTapCenter: _modalBottomSheetMenu,
+            // onTapCenter: () {
+            //   showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) => SingleChildScrollView(
+            //       child: Container(
+            //         padding: EdgeInsets.only(
+            //           bottom: MediaQuery.of(context).viewInsets.bottom,
+            //         ),
+            //         child: AddTaskScreen(),
+            //       ),
+            //     ),
+            //   );
+            // },
           ),
           CustomBottomNavigationItem(
             icon: Icons.settings,

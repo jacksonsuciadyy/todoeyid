@@ -10,11 +10,35 @@ class TasksList extends StatelessWidget {
   //   Task(name: 'Task 3'),
   // ];
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Consumer<Tasks>(
+  //     builder: (ctx, tasksData, _) => Container(
+  //       child: Center(
+  //         child: ListView.builder(
+  //           itemCount: tasksData.length,
+  //           itemBuilder: (ctx, i) {
+  //             final task = tasksData.tasks[i];
+  //             return TaskTile(
+  //               name: task.name,
+  //               taskDate: task.taskDate,
+  //               isDone: task.isDone,
+  //               checkboxCallback: (bool checkboxState) {
+  //                 tasksData.updateTask(task.taskID);
+  //               },
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Tasks>(
       builder: (ctx, tasksData, _) => Container(
-        child: Center(
+        child: Expanded(
           child: ListView.builder(
             itemCount: tasksData.length,
             itemBuilder: (ctx, i) {
