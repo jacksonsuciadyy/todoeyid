@@ -9,23 +9,44 @@ class TasksDateScreen extends StatefulWidget {
 }
 
 class _TasksDateScreenState extends State<TasksDateScreen> {
-  List<Widget> _tasksData(BuildContext context, String dateTime) {
-    List<Widget> tasks = [];
-    var tasksData = Provider.of<Tasks>(context).getTasksWithDate(dateTime);
-    for (var task in tasksData) {
-      tasks.add(
-        TaskTile(
-          name: task.name,
-          taskDate: task.taskDate,
-          isDone: task.isDone,
-          checkboxCallback: (bool checkboxState) {
-            Provider.of<Tasks>(context, listen: false).updateTask(task.taskID);
-          },
-        ),
-      );
-    }
+  List<String> _tasksDate = [];
+  List<Task> _tasks = [];
+  bool _isInit = true;
 
-    return tasks;
+  // List<Widget> _tasksData(BuildContext context, String dateTime) {
+  //   // List<Widget> tasks = [];
+  //   var tasksData = Provider.of<Tasks>(context).getTasksWithDate(dateTime);
+  //   for (var task in tasksData) {
+  //     tasks.add(
+  //       TaskTile(
+  //         name: task.name,
+  //         taskDate: task.taskDate,
+  //         isDone: task.isDone,
+  //         checkboxCallback: (bool checkboxState) {
+  //           Provider.of<Tasks>(context, listen: false).updateTask(task.taskID);
+  //         },
+  //       ),
+  //     );
+  //   }
+
+  //   return tasks;
+  // }
+
+  void getTasksDateFromDB() async {
+    _tasksDate = await Provider.of<Tasks>(context).getDates();
+  }
+
+  void getTasksFromDB(String taskDate) async {
+    _tasks = await Provider.of<Tasks>(context).getTasksWithDate(taskDate);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
+      _isInit = false;
+      getTasksDateFromDB();
+    }
   }
 
   showAlertDialog(BuildContext context, String taskDate) {
@@ -95,43 +116,72 @@ class _TasksDateScreenState extends State<TasksDateScreen> {
     );
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   // List<String> _tasksDate = Provider.of<Tasks>(context).getDates();
+  //   return ListView.builder(
+  //     itemCount: _tasksDate.length,
+  //     itemBuilder: (context, i) {
+  //       return Column(
+  //         children: [
+  //           Center(
+  //             child: InkWell(
+  //               onTap: () {
+  //                 showAlertDialog(context, _tasksDate[i]);
+  //               },
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                     color: Theme.of(context).primaryColor,
+  //                     borderRadius: BorderRadius.circular(20)),
+  //                 padding:
+  //                     EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+  //                 margin: EdgeInsets.symmetric(vertical: 10.0),
+  //                 child: Text(
+  //                   _tasksDate[i],
+  //                   style: new TextStyle(
+  //                     fontSize: 14.0,
+  //                     fontWeight: FontWeight.bold,
+  //                     color: Colors.white,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           Column(
+  //             children: _tasksData(context, _tasksDate[i]),
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
-    List<String> _tasksDate = Provider.of<Tasks>(context).getDates();
-    return ListView.builder(
-      itemCount: _tasksDate.length,
-      itemBuilder: (context, i) {
-        return Column(
-          children: [
-            Center(
-              child: InkWell(
-                onTap: () {
-                  showAlertDialog(context, _tasksDate[i]);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(20)),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    _tasksDate[i],
-                    style: new TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Column(
-              children: _tasksData(context, _tasksDate[i]),
+    // List<String> _tasksDate = Provider.of<Tasks>(context).getDates();
+    return FutureBuilder(
+      future: Provider.of<Tasks>(context, listen: false).getDates(),
+      builder: (ctx, ss) => ss.connectionState == ConnectionState.waiting
+          ? Center(
+              child: CircularProgressIndicator(),
             )
-          ],
-        );
-      },
+          : Consumer<Tasks>(
+              child: Center(
+                child: Text('Got no tasks yet, start adding some!'),
+              ),
+              builder: (ctx, tasks, ch) => tasks.tasksdate.length <= 0
+                  ? ch
+                  : FutureBuilder(
+                      future:
+                          Provider.of<Tasks>(context, listen: false).getDates(),
+                      builder: (ctx, ss) =>
+                          ss.connectionState == ConnectionState.waiting
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Text(''),
+                    ),
+            ),
     );
   }
 }
