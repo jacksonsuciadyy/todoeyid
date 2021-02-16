@@ -11,7 +11,7 @@ class DBHelper {
       path.join(dbPath, 'tasks.db'),
       onCreate: (db, version) {
         return db.execute(
-            'CREATE TABLE tasks(taskID TEXT PRIMARY KEY, name TEXT, taskDate DATETIME, isDone INTEGER Default 0)');
+            'CREATE TABLE tasks(taskID TEXT PRIMARY KEY, name TEXT, taskDate TEXT, isDone INTEGER Default 0)');
       },
       version: 1,
     );
@@ -48,8 +48,14 @@ class DBHelper {
     return db.query(table);
   }
 
+  static Future<List<Map<String, dynamic>>> getTasksDate(String table) async {
+    // Fetch Data
+    final db = await DBHelper.databaseTasks();
+    return db.query(table, groupBy: 'taskDate');
+  }
+
   static Future<List<Map<String, dynamic>>> getTasksDataWithDate(
-      String table, DateTime taskDate) async {
+      String table, String taskDate) async {
     // Fetch Data
     final db = await DBHelper.databaseTasks();
     return db.query(table, where: 'taskDate = ?', whereArgs: [taskDate]);

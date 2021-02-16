@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:todoeyid/helpers/dbHelper.dart';
 import 'package:todoeyid/models/tasks.dart';
 import 'package:todoeyid/widgets/taskTile.dart';
 
@@ -9,44 +11,37 @@ class TasksDateScreen extends StatefulWidget {
 }
 
 class _TasksDateScreenState extends State<TasksDateScreen> {
-  List<String> _tasksDate = [];
-  List<Task> _tasks = [];
-  bool _isInit = true;
+  // List<String> _tasksDate = [];
+  // List<Task> _tasks = [];
+  // bool _isInit = true;
 
   // List<Widget> _tasksData(BuildContext context, String dateTime) {
-  //   // List<Widget> tasks = [];
-  //   var tasksData = Provider.of<Tasks>(context).getTasksWithDate(dateTime);
-  //   for (var task in tasksData) {
-  //     tasks.add(
-  //       TaskTile(
-  //         name: task.name,
-  //         taskDate: task.taskDate,
-  //         isDone: task.isDone,
-  //         checkboxCallback: (bool checkboxState) {
-  //           Provider.of<Tasks>(context, listen: false).updateTask(task.taskID);
-  //         },
-  //       ),
-  //     );
-  //   }
+  //   List<Widget> tasks = [];
+  //   getTasksFromDB(dateTime).then((tasksData) {
+  //     for (var task in tasksData) {
+  //       tasks.add(
+  //         TaskTile(
+  //           name: task.name,
+  //           taskDate: task.taskDate,
+  //           isDone: task.isDone,
+  //           checkboxCallback: (bool checkboxState) {
+  //             Provider.of<Tasks>(context, listen: false)
+  //                 .updateTask(task.taskID);
+  //           },
+  //         ),
+  //       );
+  //     }
+  //   });
 
   //   return tasks;
   // }
 
-  void getTasksDateFromDB() async {
-    _tasksDate = await Provider.of<Tasks>(context).getDates();
-  }
+  // void getTasksDateFromDB() async {
+  //   _tasksDate = await Provider.of<Tasks>(context).getDates();
+  // }
 
-  void getTasksFromDB(String taskDate) async {
-    _tasks = await Provider.of<Tasks>(context).getTasksWithDate(taskDate);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInit) {
-      _isInit = false;
-      getTasksDateFromDB();
-    }
+  Future<List<Task>> getTasksFromDB(String taskDate) async {
+    return await Provider.of<Tasks>(context).getTasksWithDate(taskDate);
   }
 
   showAlertDialog(BuildContext context, String taskDate) {
@@ -156,32 +151,103 @@ class _TasksDateScreenState extends State<TasksDateScreen> {
   //   );
   // }
 
+  // getTasksDate() async {
+  //   final dataList = await DBHelper.getTasksDate('tasks');
+  //   // print(dataList);
+  //   return dataList;
+  // }
+
+  // getTasksDataFromDate(String dateTime) async {
+  //   final dataList = await DBHelper.getTasksDataWithDate('tasks', dateTime);
+  //   return dataList;
+  // }
+
   @override
   Widget build(BuildContext context) {
     // List<String> _tasksDate = Provider.of<Tasks>(context).getDates();
     return FutureBuilder(
-      future: Provider.of<Tasks>(context, listen: false).getDates(),
-      builder: (ctx, ss) => ss.connectionState == ConnectionState.waiting
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Consumer<Tasks>(
-              child: Center(
-                child: Text('Got no tasks yet, start adding some!'),
-              ),
-              builder: (ctx, tasks, ch) => tasks.tasksdate.length <= 0
-                  ? ch
-                  : FutureBuilder(
-                      future:
-                          Provider.of<Tasks>(context, listen: false).getDates(),
-                      builder: (ctx, ss) =>
-                          ss.connectionState == ConnectionState.waiting
-                              ? Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : Text(''),
+      // future: Provider.of<Tasks>(context, listen: false).getDates(),
+      future: Provider.of<Tasks>(context).getTasksDate(),
+      builder: (ctx, ss) {
+        // if (ss.hasData)
+        //   return Text(ss.data.toString());
+        // else
+        //   return Text("No Data");
+        if (!ss.hasData)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        else {
+          return ListView.builder(
+            itemCount: ss.data.length,
+            itemBuilder: (context, i) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        showAlertDialog(context, ss.data[i]);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(20)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        margin: EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          DateFormat('EEE, dd MMMM yy', 'en_US').format(
+                              DateFormat('yyyy-MM-ddTHH:mm:ss.mmmZ')
+                                  .parse(ss.data[i]['taskDate'])),
+                          style: new TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
-            ),
+                  ),
+                  // Column(
+                  //   children: _tasksData(context, ss.data[i]['taskDate']),
+                  // )
+                  FutureBuilder(
+                    future: Provider.of<Tasks>(context, listen: false)
+                        .getTasksDataFromDate(ss.data[i]['taskDate']),
+                    builder: (ctx, ssTask) {
+                      if (!ssTask.hasData)
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      else {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: ssTask.data.length,
+                          itemBuilder: (ctx, it) {
+                            // print(ssTask.data[it]['taskDate']);
+                            return TaskTile(
+                              name: ssTask.data[it]['name'],
+                              taskDate: DateFormat('yyyy-MM-ddTHH:mm:ss.mmmZ')
+                                  .parse(ssTask.data[it]['taskDate']),
+                              isDone:
+                                  ssTask.data[it]['isDone'] == 0 ? false : true,
+                              checkboxCallback: (bool checkboxState) {
+                                Provider.of<Tasks>(context, listen: false)
+                                    .updateTask(ssTask.data[it]['taskID']);
+                              },
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
     );
   }
 }
